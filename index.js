@@ -23,7 +23,7 @@ client.connect(err => {
         collection.insertOne(product)
             .then(result => {
                 // console.log(result,product);
-                res.send('success')
+                res.redirect('/')
             })
 
     })
@@ -34,17 +34,19 @@ client.connect(err => {
         collection.find({})
             .toArray((err, documents) => {
                 res.send(documents);
-
+                 
             })
     })
 
     // Delete item 
     app.delete('/deleteItem/:id', (req, res) => {
         collection.deleteOne({ _id: ObjectId(req.params.id) })
-            .then(result => {
-                console.log(result);
+            .then( result => {
+                
+                res.send(result.deletedCount > 0)
+                 
             })
-        //console.log(req.params.id);
+         
     })
 
     // Load single product info
@@ -65,7 +67,7 @@ client.connect(err => {
                 $set: { price: req.body.price, quantity: req.body.quantity }
             })
             .then(result => {
-                console.log(result);
+                 res.send(result.modifiedCount > 0)
             })
     })
 

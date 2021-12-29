@@ -24,7 +24,7 @@
         }
 
         #update {
-            border: 2px solid rgb(69, 69, 226);
+            /* border: 2px solid rgb(69, 69, 226); */
             border-radius: 5px;
             padding: 15px;
             margin: 15px;
@@ -66,6 +66,7 @@
                 .then(res => res.json())
                 .then(products => {
                     const allProducts = document.getElementById('products');
+                    allProducts.innerHTML = '';
                     products.forEach(product => {
                         //console.log(product);
                         const item = document.createElement('div');
@@ -74,7 +75,7 @@
                          <h4>  ${product.name}</h4> 
                          <p1> Price: ${product.price} BDT </p1> </br>
                          <p1> Quantity: ${product.quantity} </p1> <br> 
-                         <button onclick="deleteItem('${product._id}')">Delete</button>
+                         <button onclick="deleteItem(event,'${product._id}')">Delete</button>
                          <button onclick="loadItem('${product._id}')" >Detail</button>
                         `
 
@@ -83,17 +84,20 @@
                     });
                 })
         }
-        loadAllProducts()
+
 
         // Delete single item
 
-        const deleteItem = (id) => {
+        const deleteItem = (event, id) => {
+            console.log(event.target.parentNode);
             fetch(`/deleteItem/${id}`, {
                 method: 'DELETE'
             })
                 .then(res => res.json())
                 .then(result => {
-                    console.log(id, result);
+                    if (result) {
+                        event.target.parentNode.style.display = 'none'
+                    }
                 })
         }
 
@@ -110,7 +114,7 @@
                    <input type="text" placeholder="quantity" value=${data.quantity} id="quantity"><br> <br>
                      <button onclick="updateProductInfo('${data._id}')" >Update</button>
                     `
-                    console.log(data);
+                  //  console.log(data);
                 })
         }
 
@@ -127,12 +131,15 @@
                 body: JSON.stringify(product)
             })
                 .then(res => res.json())
-                .then(data => {
-                    console.log('updated');
+                .then(result => {
+                    if (result) {
+                        loadAllProducts();
+                        document.getElementById('update').innerHTML = '';
+                    }
                 })
 
         }
-
+        loadAllProducts()
     </script>
 </body>
 
