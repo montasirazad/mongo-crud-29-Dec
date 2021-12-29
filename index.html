@@ -39,9 +39,9 @@
     <div>
 
         <form action="/addProduct" method="post">
-            <input type="text" placeholder="add item" name="name" id="item">
-            <input type="text" placeholder="price" name="price" id="price">
-            <input type="text" placeholder="quantity" name="quantity" id="quantity">
+            <input type="text" placeholder="add item" name="name">
+            <input type="text" placeholder="price" name="price">
+            <input type="text" placeholder="quantity" name="quantity">
             <button class="btn btn-primary">ADD-ITEM</button>
 
         </form>
@@ -108,10 +108,29 @@
                     update.innerHTML = `<h2>${data.name}</h2> Id: ${data._id} </br>
                     <input type="text" placeholder="price" value=${data.price} id="price">  </br> 
                    <input type="text" placeholder="quantity" value=${data.quantity} id="quantity"><br> <br>
-                     <button >Update</button>
+                     <button onclick="updateProductInfo('${data._id}')" >Update</button>
                     `
                     console.log(data);
                 })
+        }
+
+
+        // Update product info 
+
+        const updateProductInfo = (id) => {
+            const price = document.getElementById('price').value;
+            const quantity = document.getElementById('quantity').value;
+            const product = { id, price, quantity }
+            fetch(`/update/${id}`, {
+                method: "PATCH",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(product)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log('updated');
+                })
+
         }
 
     </script>
